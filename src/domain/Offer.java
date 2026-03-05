@@ -1,7 +1,5 @@
 package domain;
 
-import resources.Skill;
-
 public class Offer {
     private String ID;
     private String note;

@@ -1,7 +1,5 @@
 package domain;
 
-import resources.Skill;
-
 public class Request {
     private Student student;
     private Skill skill;
