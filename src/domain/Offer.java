@@ -11,4 +11,8 @@ public class Offer {
         this.student = student;
         this.skill = skill;
     }
+
+    public String getID() {
+        return ID;
+    }
 }
