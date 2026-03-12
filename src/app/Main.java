@@ -13,6 +13,8 @@ import domain.Skill;
 import domain.Student;
 
 import java.io.File;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import service.Review;
 
 public class Main {
@@ -103,13 +105,22 @@ public class Main {
 
             while((riga = brExchanges.readLine()) != null) {
                 String[] dati = riga.split(";");
-                if (dati.length == 2) {
-                    Offer o = offers.get(dati[0]);
-                    Request r = requests.get(dati[1]);
-                    
-                    Exchange ex = new Exchange(o, r); 
-                } else {
-                    System.out.println("Dati insufficienti");
+                try {
+                    if (dati.length == 6) {
+                        Offer o = offers.get(dati[0]);
+                        Request r = requests.get(dati[1]);
+                        Status status = parseStatus(dati[3]);
+                        LocalDateTime createdAt = parseLocalDate(dati[4]);
+                        LocalDateTime closedAt = parseLocalDate(dati[5]);
+
+                        Exchange ex = new Exchange(dati[0], o, r, status, createdAt, closedAt); 
+                    } else {
+                        System.out.println("Dati insufficienti");
+                    }
+                } catch(IllegalArgumentException e) {
+                    e.getMessage();
+                } catch(DateTimeException e) {
+                    e.getMessage();
                 }
             }
 
