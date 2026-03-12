@@ -7,7 +7,7 @@ public class Offer {
     private Student student;
     private Skill skill;
 
-    public Offer(Student student, Skill skill) {
+    public Offer(String ID, String note, Student student, Skill skill) {
         this.student = student;
         this.skill = skill;
     }

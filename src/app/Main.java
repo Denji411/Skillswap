@@ -15,6 +15,9 @@ import domain.Student;
 import java.io.File;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import resources.Category;
+import resources.Level;
+import resources.Status;
 import service.Review;
 
 public class Main {
@@ -92,14 +95,19 @@ public class Main {
 
             while((riga = brRequests.readLine()) != null) {
                 String[] dati = riga.split(";");
-                if (dati.length == 2) {
-                    Student s = students.get(dati[0]);
-                    Skill sk = skills.get(dati[1]);
-                    
-                    Request r = new Request(s, sk);
-                    requests.put(r.getID(), r);
-                } else {
-                    System.out.println("Dati insufficienti");
+                try {
+                    if (dati.length == 5) {
+                        Student s = students.get(dati[0]);
+                        Skill sk = skills.get(dati[1]);
+                        Level level = parseLevel(dati[3]);
+                        
+                        Request r = new Request(dati[0], s, sk, level, dati[4]);
+                        requests.put(r.getID(), r);
+                    } else {
+                        System.out.println("Dati insufficienti");
+                    }
+                } catch (IllegalArgumentException e) {
+                    e.getMessage();
                 }
             }
 
@@ -117,9 +125,7 @@ public class Main {
                     } else {
                         System.out.println("Dati insufficienti");
                     }
-                } catch(IllegalArgumentException e) {
-                    e.getMessage();
-                } catch(DateTimeException e) {
+                } catch(IllegalArgumentException | DateTimeException e) {
                     e.getMessage();
                 }
             }
