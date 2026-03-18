@@ -13,10 +13,6 @@ public class Skill {
         this.category = category;
     }
 
-    public Category parseCategory(String s) throws IllegalArgumentException {
-        return Category.valueOf(s);
-    }
-
     public String getID() {
         return ID;
     }

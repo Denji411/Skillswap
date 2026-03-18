@@ -17,14 +17,6 @@ public class Student {
         this.ratingCount = ratingCount;
     }
 
-    public double parseAvgRating(String s) throws NumberFormatException {
-        return Double.parseDouble(s);
-    }
-
-    public int parseRatingcount(String s) throws NumberFormatException {
-        return Integer.parseInt(s);
-    }
-
     public String getID() {
         return ID;
     }

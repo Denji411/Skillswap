@@ -1,6 +1,5 @@
 package domain;
 
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import resources.Status;
 
@@ -19,14 +18,6 @@ public class Exchange {
         this.status = status;
         this.createdAt = createdAt;
         this.closedAt = closedAt;
-    }
-
-    public Status parseStatus(String s) throws IllegalArgumentException {
-        return Status.valueOf(s);
-    }
-
-    public LocalDateTime parseLocalDate(String s) throws DateTimeException {
-        return LocalDateTime.parse(s);
     }
 
     public String getID() {

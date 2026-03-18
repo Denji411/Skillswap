@@ -17,10 +17,6 @@ public class Request {
         this.note = note;
     }
 
-    public Level parseLevel(String s) throws IllegalArgumentException {
-        return Level.valueOf(s);
-    }
-
     public String getID() {
         return ID;
     }
