@@ -13,12 +13,19 @@ public class Review {
     LocalDateTime createdAt;
 
     public Review(String ID, Exchange exchange, Student reviewer, Student reviewed, double stars, String comment, LocalDateTime createdAt) {
+        if (!isValidID(ID)) throw new IllegalArgumentException("Id non valido");
+        if (stars < 1 || stars > 5) throw new IllegalArgumentException("Recensione non valida");
+
         this.ID = ID;
         this.exchange = exchange;
         this.reviewer = reviewer;
         this.reviewed = reviewed;
         this.stars = stars;
         this.createdAt = createdAt;
+    }
+
+    private boolean isValidID(String ID) {
+        return ID != null && ID_PATTERN.matcher(ID).matches();
     }
 
     public String getID() {

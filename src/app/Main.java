@@ -87,17 +87,18 @@ public class Main {
 
             while((riga = brOffers.readLine()) != null) {
                 String[] dati = riga.split(";");
-                if (dati.length == 5) {
-                    boolean active = ParserUtils.parseActive(dati[2]);
-                    Student s = students.get(dati[3]);
-                    Skill sk = skills.get(dati[4]);
+                if (dati.length == 6) {
+                    Level level = ParserUtils.parseLevel(dati[2]);
+                    boolean active = ParserUtils.parseActive(dati[3]);
+                    Student s = students.get(dati[4]);
+                    Skill sk = skills.get(dati[5]);
 
                     if(s == null || sk == null) {
                         System.out.println("Student o skill non trovato: " + riga);
                         continue;
                     }
                     
-                    Offer o = new Offer(dati[0], dati[1], active, s, sk);
+                    Offer o = new Offer(dati[0], dati[1], level, active, s, sk);
                     offers.put(o.getID(), o);
                 } else {
                     System.out.println("Dati insufficienti: " + riga);
