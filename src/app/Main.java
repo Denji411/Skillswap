@@ -18,6 +18,7 @@ import resources.NextID;
 import resources.ParserUtils;
 import resources.Status;
 import service.Review;
+import status.Maps;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
@@ -27,12 +28,6 @@ public class Main {
     private static int nextRequestID = 1;
 
     private static Map<String, Runnable> comandi = new HashMap<>();
-    private static Map<String, Student> students = new HashMap<>();
-    private static Map<String, Skill> skills = new HashMap<>();
-    private static Map<String, Offer> offers = new HashMap<>();
-    private static Map<String, Request> requests = new HashMap<>();
-    private static Map<String, Exchange> exchanges = new HashMap<>();
-    private static Map<String, Review> reviews = new HashMap<>();
 
     public static void main(String[] args) {
 
@@ -53,102 +48,40 @@ public class Main {
         ) {
             String riga;
             while((riga = brStudents.readLine()) != null) {
-                String[] dati = riga.split(";");
-                if (dati.length == 6) {
-                    try {
-                        double avgRating = ParserUtils.parseAvgRating(dati[4]);
-                        int ratingCount = ParserUtils.parseRatingcount(dati[5]);
-                        
-                        Student s = new Student(dati[0], dati[1], dati[2], dati[3], avgRating, ratingCount);
-                        students.put(s.getID(), s);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    } 
-                } else {
-                    System.out.println("Dati insufficienti: " + riga);
-                }
+                try {
+                    Maps.addStudent(riga);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                } 
             }
 
             while((riga = brSkills.readLine()) != null) {
-                String[] dati = riga.split(";");
-                if (dati.length == 3) {
-                    try {
-                        Category category = ParserUtils.parseCategory(dati[2]);
-                        
-                        Skill sk = new Skill(dati[0], dati[1], category);
-                        skills.put(sk.getID(), sk);
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } 
-                } else {
-                    System.out.println("Dati insufficienti: " + riga);
+                try {
+                    Maps.addSkill(riga);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
                 }
             }
 
             while((riga = brOffers.readLine()) != null) {
-                String[] dati = riga.split(";");
-                if (dati.length == 6) {
-                    Level level = ParserUtils.parseLevel(dati[2]);
-                    boolean active = ParserUtils.parseActive(dati[3]);
-                    Student s = students.get(dati[4]);
-                    Skill sk = skills.get(dati[5]);
-
-                    if(s == null || sk == null) {
-                        System.out.println("Student o skill non trovato: " + riga);
-                        continue;
-                    }
-                    
-                    Offer o = new Offer(dati[0], dati[1], level, active, s, sk);
-                    offers.put(o.getID(), o);
-                } else {
-                    System.out.println("Dati insufficienti: " + riga);
+                try {
+                    Maps.addOffer(riga);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
                 }
             }
 
             while((riga = brRequests.readLine()) != null) {
-                String[] dati = riga.split(";");
                 try {
-                    if (dati.length == 5) {
-                        Student s = students.get(dati[1]);
-                        Skill sk = skills.get(dati[2]);
-                        Level level = ParserUtils.parseLevel(dati[3]);
-
-                        if(s == null || sk == null) {
-                            System.out.println("Student o skill non trovato: " + riga);
-                            continue;
-                        }
-                        
-                        Request r = new Request(dati[0], s, sk, level, dati[4]);
-                        requests.put(r.getID(), r);
-                    } else {
-                        System.out.println("Dati insufficienti: " + riga);
-                    }
+                    Maps.addRequest(riga);
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                 }
             }
 
             while((riga = brExchanges.readLine()) != null) {
-                String[] dati = riga.split(";");
                 try {
-                    if (dati.length == 6) {
-                        Offer o = offers.get(dati[1]);
-                        Request r = requests.get(dati[2]);
-
-                        if(o == null || r == null) {
-                            System.out.println("Offer o request non trovato: " + riga);
-                            continue;
-                        }
-
-                        Status status = ParserUtils.parseStatus(dati[3]);
-                        LocalDateTime createdAt = ParserUtils.parseLocalDate(dati[4]);
-                        LocalDateTime closedAt = ParserUtils.parseLocalDate(dati[5]);
-
-                        Exchange ex = new Exchange(dati[0], o, r, status, createdAt, closedAt); 
-                        exchanges.put(ex.getID(), ex);
-                    } else {
-                        System.out.println("Dati insufficienti: " + riga);
-                    }
+                    Maps.addExchanges(riga);
                 } catch(IllegalArgumentException | DateTimeException e) {
                     e.printStackTrace();
                 }
@@ -179,7 +112,6 @@ public class Main {
                     e.printStackTrace();
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -265,7 +197,7 @@ public class Main {
         System.out.print("Inserisci una descrizione: ");
         String desc = scanner.toString();
 
-        Offer o = new Offer(ID, desc, true, s, sk);
+        Offer o = new Offer(ID, desc, Level.ADVANCED, true, s, sk);
         offers.put(o.getID(), o);
 
         System.out.println("Offerta creata con ID: " + ID);

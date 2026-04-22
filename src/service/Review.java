@@ -3,6 +3,7 @@ package service;
 import domain.Exchange;
 import domain.Student;
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 public class Review {
     private String ID;
@@ -11,6 +12,9 @@ public class Review {
     private Student reviewed; //studente recensito
     private double stars; //recensione in stelle (1-5)
     LocalDateTime createdAt;
+
+    private static final Pattern ID_PATTERN =
+           Pattern.compile("^[V]\\d+$");
 
     public Review(String ID, Exchange exchange, Student reviewer, Student reviewed, double stars, String comment, LocalDateTime createdAt) {
         if (!isValidID(ID)) throw new IllegalArgumentException("Id non valido");

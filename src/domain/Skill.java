@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.regex.Pattern;
 import resources.Category;
 
 public class Skill {

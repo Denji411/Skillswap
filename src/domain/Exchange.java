@@ -2,7 +2,6 @@ package domain;
 
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
-
 import resources.Status;
 
 public class Exchange {
