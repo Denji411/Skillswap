@@ -1,6 +1,5 @@
 package app;
 
-import domain.Exchange;
 import domain.Offer;
 import domain.Request;
 import domain.Skill;
@@ -10,14 +9,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.DateTimeException;
-import java.time.LocalDateTime;
 import java.util.*;
-import resources.Category;
 import resources.Level;
 import resources.NextID;
 import resources.ParserUtils;
-import resources.Status;
-import service.Review;
 import status.Maps;
 
 public class Main {
@@ -27,7 +22,7 @@ public class Main {
     private static int nextOfferID = 1;
     private static int nextRequestID = 1;
 
-    private static Map<String, Runnable> comandi = new HashMap<>();
+    private static final Map<String, Runnable> comandi = new HashMap<>();
 
     public static void main(String[] args) {
 
@@ -88,26 +83,8 @@ public class Main {
             }
 
             while((riga = brReviews.readLine()) != null) {
-                String[] dati = riga.split(";");
                 try {
-                    if (dati.length == 7) {
-                        Exchange ex = exchanges.get(dati[1]);
-                        Student s1 = students.get(dati[2]);
-                        Student s2 = students.get(dati[3]);
-
-                        if(ex == null || s1 == null || s2 == null) {
-                            System.out.println("Exchange o student non trovato: " + riga);
-                            continue;
-                        }
-
-                        double stars = ParserUtils.parseStars(dati[4]);
-                        LocalDateTime createdAt = ParserUtils.parseLocalDate(dati[6]);
-                        
-                        Review rv = new Review(dati[0], ex, s1, s2, stars, dati[5], createdAt); 
-                        reviews.put(rv.getID(), rv);
-                    } else {
-                        System.out.println("Dati insufficienti: " + riga);
-                    }
+                    Maps.addReview(riga);
                 } catch(NumberFormatException | DateTimeException e) {
                     e.printStackTrace();
                 }
@@ -116,14 +93,14 @@ public class Main {
             e.printStackTrace();
         }
 
-        nextStudentID = NextID.initNextStudentID(students);
-        nextOfferID = NextID.initNextOfferID(offers);
-        nextRequestID = NextID.initNextRequestID(requests);
+        nextStudentID = NextID.initNextStudentID(Maps.getStudents());
+        nextOfferID = NextID.initNextOfferID(Maps.getOffers());
+        nextRequestID = NextID.initNextRequestID(Maps.getRequests());
 
-        comandi.put("cs", Main::createStudent);
-        comandi.put("addo", Main::addOffer);
-        comandi.put("addr", Main::addRequest);
-        comandi.put("print", Main::printList);
+        comandi.put("1", Main::createStudent);
+        comandi.put("2", Main::addOffer);
+        comandi.put("3", Main::addRequest);
+        comandi.put("4", Main::printList);
         
         while(true) {
             System.out.print("> ");
@@ -152,8 +129,7 @@ public class Main {
         System.out.print("> ");
         String input = scanner.nextLine().trim();
         String[] parts = input.split(" ");
-        for (int i = 0; i < parts.length; i++) {
-            String p = parts[i];
+        for (String p : parts) {
             name += p.substring(0,1).toUpperCase() + p.substring(1).toLowerCase() + " ";
         }
 
@@ -168,7 +144,7 @@ public class Main {
         email = scanner.nextLine().trim();
 
         Student s = new Student(ID, name, studentClass, email, 0, 0);
-        students.put(s.getID(), s);
+        Maps.addStudent(s);
     }
 
     private static void addOffer() {
@@ -176,7 +152,7 @@ public class Main {
 
         System.out.print("Inserisci ID Studente: ");
         String studentId = scanner.nextLine().trim();
-        Student s = students.get(studentId);
+        Student s = Maps.getStudents().get(studentId);
 
         if (s == null) {
             System.out.println("Studente non trovato");
@@ -185,7 +161,7 @@ public class Main {
 
         System.out.print("Inserisci ID Skill: ");
         String skillId = scanner.nextLine().trim();
-        Skill sk = skills.get(skillId);
+        Skill sk = Maps.getSkills().get(skillId);
 
         if (sk == null) {
             System.out.println("Skill non trovata");
@@ -198,7 +174,7 @@ public class Main {
         String desc = scanner.toString();
 
         Offer o = new Offer(ID, desc, Level.ADVANCED, true, s, sk);
-        offers.put(o.getID(), o);
+        Maps.addOffer(o);
 
         System.out.println("Offerta creata con ID: " + ID);
     }
@@ -208,7 +184,7 @@ public class Main {
 
         System.out.print("Inserisci ID Studente: ");
         String studentId = scanner.nextLine().trim();
-        Student s = students.get(studentId);
+        Student s = Maps.getStudents().get(studentId);
 
         if (s == null) {
             System.out.println("Studente non trovato");
@@ -217,7 +193,7 @@ public class Main {
 
         System.out.print("Inserisci ID Skill: ");
         String skillId = scanner.nextLine().trim();
-        Skill sk = skills.get(skillId);
+        Skill sk = Maps.getSkills().get(skillId);
 
         if (sk == null) {
             System.out.println("Skill non trovata");
@@ -241,19 +217,19 @@ public class Main {
         String ID = "R" + nextRequestID;
 
         Request r = new Request(ID, s, sk, level, desc);
-        requests.put(r.getID(), r);
+        Maps.addRequest(r);
 
         System.out.println("Richiesta creata con ID: " + ID);
     }
 
     private static void printList() {
         System.out.println("Lista Offers:");
-        for (Offer o : offers.values()) {
+        for (Offer o : Maps.getOffers().values()) {
             System.out.println(o);
         }
 
         System.out.println("Lista Requests:");
-        for (Request r : requests.values()) {
+        for (Request r : Maps.getRequests().values()) {
                 System.out.println(r);
         }
     }

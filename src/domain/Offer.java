@@ -32,4 +32,16 @@ public class Offer {
     public String getID() {
         return ID;
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public Skill getSkill() {
+        return skill;
+    }
 }

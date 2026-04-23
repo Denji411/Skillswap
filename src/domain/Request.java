@@ -30,4 +30,8 @@ public class Request {
     public String getID() {
         return ID;
     }
+
+    public Skill getSkill() {
+        return skill;
+    }
 }
